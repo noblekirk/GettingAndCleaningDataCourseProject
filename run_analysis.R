@@ -13,8 +13,13 @@ if (!require("reshape2")) {
   install.packages("reshape2")
 }
 
+if (!require("dplyr")) {
+  install.packages("dplyr")
+}
+
 require("data.table")
 require("reshape2")
+require("dplyr")
 
 ##Read in labels files: activity_labels.txt, features.txt
 activity <- read.table("./UCI HAR Dataset/activity_labels.txt")[,2]
