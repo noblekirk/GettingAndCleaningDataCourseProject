@@ -1,0 +1,106 @@
+===============
+STUDY DESIGN
+===============
+
+Data Source
+=============
+- UCI HAR Dataset download used for the project:
+        https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
+- Full description of the dataset is available at the site where the data was obtained: 
+        http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+
+Data Set Information (taken from the full description link above)
+------------------------------------------------------------------
+The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, 
+STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant 
+rate of 50Hz. The experiments have been video-recorded to label the data manually. The obtained dataset has been randomly partitioned into two sets, where 70% of the volunteers was selected for generating 
+the training data and 30% the test data.
+
+The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor 
+acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have 
+only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain.
+
+UCI HAR Dataset
+---------------
+The dataset includes the following files:
+- 'README.txt'
+- 'features_info.txt': Shows information about the variables used on the feature vector.
+- 'features.txt': List of all features.
+- 'activity_labels.txt': Links the class labels with their activity name.
+- 'train/X_train.txt': Training set.
+- 'train/y_train.txt': Training labels.
+- 'test/X_test.txt': Test set.
+- 'test/y_test.txt': Test labels.
+
+The following files are available for the train and test data. Their descriptions are equivalent. 
+- 'train/subject_train.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 
+- 'train/Inertial Signals/total_acc_x_train.txt': The acceleration signal from the smartphone accelerometer X axis in standard gravity units 'g'. Every row shows a 128 element vector. The same description applies for the 'total_acc_x_train.txt' and 'total_acc_z_train.txt' files for the Y and Z axis. 
+- 'train/Inertial Signals/body_acc_x_train.txt': The body acceleration signal obtained by subtracting the gravity from the total acceleration. 
+- 'train/Inertial Signals/body_gyro_x_train.txt': The angular velocity vector measured by the gyroscope for each window sample. The units are radians/second. 
+
+run_analysis.R process
+=======================
+-Read in labels files activity_labels.txt, features.txt into tables 'activity' and 'features'.
+-Search 'features' using grepl to return TRUE if the label contains mean() or std() - these are the mean and standard deviation measurements from the original dataset. The results, 'colset', will be used later to subset the data.
+-Read in files (X_test.txt, Y_test.txt, subject_test.txt) for test dataset using read.table. Results in tables xtest, ytest and testsubj.
+-Take column names from 'xtest' and rename them from 'features'
+-Add 'activity' as a column into 'ytest'
+-Rename columns in ytest (subject, activity, activityCode)
+-Using colset, subset the columns in 'xtest'
+-Bind ytest, xtest and testsubj resulting in 'testset'
+-Read in files (X_train.txt, Y_train.txt, subject_train.txt) for train dataset using read.table. Results in tables xtrain, ytrain and trainsubj.
+-Take column names from 'xtrain' and rename them from 'features'
+-Add 'activity' as a column into 'ytrain'
+-Rename columns in ytrain (subject, activity, activityCode)
+-Using colset, subset the columns in 'xtrain'
+-Bind ytrain, xtrain and trainsubj resulting in 'trainset'
+-Row bind testset and trainset resulting in 'dataset'
+-Using names and gsub, modify column names to be more descriptive and standardize format
+-Reshape dataset using melt and dcast and arrange to produce the final dataset: 'tidy_data'
+
+
+==========
+CODE BOOK
+==========
+
+Variables in the full UCI HAR dataset
+=====================================
+For information on the full dataset variables, see the README.txt, features.txt and features_info.txt files included in the dataset download from the data source link above.
+
+
+Variables in the tidy dataset "Sensor_Mean_by_Activity.txt" produced by run_analysis.R
+=======================================================================================
+subject: unique identifier for the subject from which the data was collected                             
+activity: the activity performed during the measurements                  
+activityCode: a 1-digit code corresponding to the activity performed 
+
+The features variables are made up of 2 or more components:
+[prefix]+[base].[calculation].[axis]
+
+[prefix] values
+-----------------
+time: time domain signals
+frequency: frequency domain signals
+
+[base] values
+----------------------                      
+BodyAcceleration: Body Acceleration signal             
+GravityAcceleration: Gravity Acceleration Signal             
+BodyAccelerationJerk: Body Acceleration Jerk signal - body linear acceleration and angular velocity derived in time             
+BodyGyroscope: Body Gyroscope signal                 
+BodyGyroscopeJerk: Body Gyroscope Jerk signals          
+BodyAccelerationMagnitude: magnitude of the Body Acceleration signal      
+GravityAccelerationMagnitude:  magnitude of the Gravity Acceleration signal
+BodyAccelerationJerkMagnitude: magnitude of the Body Acceleration Jerk signal
+BodyGyroscopeMagnitude: magnitude of the Body Gyroscope signal  
+BodyGyroscopeJerkMagnitude: magnitude of the Body Gyroscope Jerk signal        
+
+[calculation] values
+----------------------------
+.Mean: the mean measurement
+.StdDev: standard deviation
+
+[axis] values
+--------------
+.X/.Y/.Z: axis for the measurement
+
