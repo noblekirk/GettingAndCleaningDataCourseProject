@@ -1,7 +1,6 @@
----
-title: "README"
-output: html_document
----
+#README
+
+##GettingAndCleaningDataCourseProject
 
 This repository includes the following files:
 README.md
