@@ -1,6 +1,4 @@
-#README
-
-##GettingAndCleaningDataCourseProject
+#GettingAndCleaningDataCourseProject
 
 This repository includes the following files:
 README.md
